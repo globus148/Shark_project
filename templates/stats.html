@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stats.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <button class="back-btn" onclick="location.href='{{ url_for('profile') }}'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+        </svg>
+        Назад
+    </button>
+
+    <h1>Ваша статистика</h1>
+
+    <div class="stats-grid">
+        <!-- График активности -->
+        <div class="stat-card chart-card">
+            <h2>Активность по времени суток</h2>
+            <canvas id="activityChart"></canvas>
+        </div>
+
+        <!-- Основные метрики -->
+        <div class="stat-card metrics-card">
+            <h2>Основные показатели</h2>
+            <div class="metric">
+                <span class="metric-label">Дата регистрации:</span>
+                <span class="metric-value">{{ registration_date }}</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Последний вход:</span>
+                <span class="metric-value">{{ last_login }}</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Всего времени в системе:</span>
+                <span class="metric-value">{{ total_time }} минут</span>
+            </div>
+        </div>
+
+        <!-- Топ слов -->
+        <div class="stat-card words-card">
+            <h2>Часто используемые термины</h2>
+            {% if top_words %}
+            <ol class="top-words-list">
+                {% for word in top_words %}
+                <li>
+                    <span class="word">{{ word.term }}</span>
+                    <span class="count">{{ word.count }} раз</span>
+                </li>
+                {% endfor %}
+            </ol>
+            {% else %}
+            <p>Недостаточно данных для анализа</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Инициализация графика активности
+    const ctx = document.getElementById('activityChart').getContext('2d');
+    const activityChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ time_labels|safe }},
+            datasets: [{
+                label: 'Количество сообщений',
+                data: {{ message_data|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Сообщений'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Время суток'
+                    }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
