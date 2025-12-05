@@ -55,10 +55,10 @@ Shark_AI/
 
 ## ⚙️ Установка и запуск
 
-1. **Клонируйте репозиторийachment:
+1. **Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/globus148/Shark_AI.git
-   cd Shark_AI
+   git clone https://github.com/globus148/Shark_project.git
+   cd Shark_project
    ```
 
 2. **Установите зависимости**:
